@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-抓取1688产品数据
+抓取1688产品列表数据
 '''
 
 import re
@@ -10,7 +10,7 @@ import json
 import requests
 from lxml import html
 
-class Product():
+class Products():
     http = None
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87',
@@ -18,59 +18,55 @@ class Product():
     }
 
     def __fetch_content(self, url):
-        # proxy = {
-        #     'http': 'http://117.85.105.170:808',
-        #     'https': 'https://117.85.105.170:808'
-        # }
-        # r = self.http.get(url, headers=self.headers, proxies=proxy)
         self.http = self.http or requests.session()
         r = self.http.get(url, headers=self.headers)
         return r.text
 
-    # 基本信息 & SKU
-    def __extract_base_and_sku(self, tree):
-        script = tree.xpath('//script[contains(., "var iDetailConfig = ")]/text()')[0]
+    # 分页数据
+    def __extract_pagination(self, tree):
+        pagination_html = tree.xpath('//div[@class="wp-paging-unit"]/ul')[0]
+        total = int(pagination_html.xpath('//em[@class="offer-count"]/text()')[0])
+        current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
+        last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
+        per_page = 20
+        return {
+            'total': total,
+            'current_page': current_page,
+            'last_page': last_page,
+            'per_page': per_page,
+            'data': []
+        }
 
-        base_str = re.findall("var iDetailConfig = ({[\s\S]*?});", script)[0].replace("'", '"')
-        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'beginAmount', 'refPrice', 'companySiteLink']}
-        sku_str = re.findall('var iDetailData = ({[\s\S]*?});', script)[0]
-        data.update(json.loads(sku_str))
+    # 产品数据
+    def __extract_product_info(self, tree):
+        price_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="price"]/em/text()')
+        base_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="title"]/a')
 
-        return data
+        def extract_product(price, other):
+            url = other.get('href')
+            return {
+                'id': int(re.findall('offer/(\d+)', url)[0]),
+                'title': other.get('title'),
+                'price': float(price),
+                'url': url
+            }
 
-    # 标题
-    def __extract_title(self, tree):
-        return tree.xpath('//h1[@class="d-title"]/text()')[0]
-
-    # 图片
-    def __extract_images(self, tree):
-        image_elements = tree.xpath('//div[@id="dt-tab"]//a[@class="box-img"]/img')
-        return list(map(lambda img_element: img_element.attrib['src'].replace('.60x60', ''), image_elements))[0:5]
-
-    # 规格参数
-    def __extract_attributes(self, tree):
-        attribute_features = tree.xpath('//td[@class="de-feature"]/text()')
-        attribute_values = tree.xpath('//td[@class="de-value"]/text()')
-        return list(map(lambda feature, value: {'feature': feature, 'value': value}, attribute_features, attribute_values))
-    
-    # 详情描述
-    def __extract_description(self, tree):
-        description_request_url = tree.xpath('//div[@id="desc-lazyload-container"]')[0].attrib['data-tfs-url']
-        content = self.__fetch_content(description_request_url)
-        return content[30:-3].replace('\\', '')
+        return list(map(extract_product, price_elements, base_elements))
 
     def go(self, url):
         content = self.__fetch_content(url)
         tree = html.fromstring(content)
 
-        product = self.__extract_base_and_sku(tree)
-        product['title'] = self.__extract_title(tree)
-        product['images'] = self.__extract_images(tree)
-        product['attributes'] = self.__extract_attributes(tree)
-        product['description'] = self.__extract_description(tree)
+        products = {
+            'total': 0,
+            'current_page': 1,
+            'last_page': 1,
+            'per_page': 20,
+            'data': []
+        }
 
-        return product
+        pagination = self.__extract_pagination(tree)
+        products.update(self.__extract_pagination(tree))
+        products['data'] = self.__extract_product_info(tree)
 
-# product = Product()
-# PRODUCT_URL = 'https://detail.1688.com/offer/540910263006.html?spm=a2615.7691456.0.0.7efec794f3bE8O'
-# print(product.go(PRODUCT_URL))
+        return products
