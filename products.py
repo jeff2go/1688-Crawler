@@ -24,10 +24,20 @@ class Products():
 
     # 分页数据
     def __extract_pagination(self, tree):
-        pagination_html = tree.xpath('//div[@class="wp-paging-unit"]/ul')[0]
-        total = int(pagination_html.xpath('//em[@class="offer-count"]/text()')[0])
-        current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
-        last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
+        pagination_htmls = tree.xpath('//div[@class="wp-paging-unit"]/ul')
+        if (len(pagination_htmls) > 0):
+            pagination_html = pagination_htmls[0]
+        else:
+            return {
+                'total': len(self.__extract_product_info(tree)),
+                'current_page': 1,
+                'last_page': 1,
+                'per_page': 20,
+                'data': []
+            }
+        total = int(tree.xpath('//em[@class="offer-count"]/text()')[0])
+        current_page = int(tree.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
+        last_page = int(tree.xpath('//em[@class="page-count"]/text()')[0])
         per_page = 20
         return {
             'total': total,
@@ -53,6 +63,59 @@ class Products():
 
         return list(map(extract_product, price_elements, base_elements))
 
+    def __extract_shop_info(self, tree):
+        shop_url_element = tree.xpath('//div[contains(@class, "base-info")]//a')[0]
+        shop_url = shop_url_element.get('href')
+        id = re.findall('https?://(.+)\.1688', shop_url)[0]
+        title_element = shop_url_element.xpath('//div[@class="company-name"]')[0]
+        title = title_element.get('title')
+
+        # 联系人
+        contactor = tree.xpath('//a[@class="membername"]/text()')[0]
+
+        # 电话
+        telphone = ''
+        telphone_element = tree.xpath('//dl/dt[starts-with(text(), "电")]/following-sibling::dd/text()')
+        if (len(telphone_element) > 0):
+            telphone = telphone_element[0].strip()
+        
+        # 移动电话
+        mobile = ''
+        mobile_element = tree.xpath('//dl/dt[contains(text(), "移动电话")]/following-sibling::dd/text()')
+        if (len(mobile_element) > 0):
+            mobile = mobile_element[0].strip()
+
+        # 地址
+        address = self.__extract_shop_address(tree)
+
+        return {
+            'id': id,
+            'title': title,
+            'contactor': contactor,
+            'telphone': telphone,
+            'mobile': mobile,
+            'address': address
+        }
+
+    def __extract_shop_address(self, tree):
+        address_text = tree.xpath('//span[@class="address_title"]/text()')[0]
+        address_tuple = re.findall('地址：\s+(.+)\s+(.+)\s+(.+)\s+(.+)\S', address_text)[0]
+        address = {
+            'city': address_tuple[2],
+            'detail': address_tuple[3]
+        }
+        if (address_tuple[0] == ' '):
+            address.update({
+                'country': address_tuple[1],
+                'state': address_tuple[2],
+            })
+        else:
+            address.update({
+                'country': address_tuple[0],
+                'state': address_tuple[1],
+            })
+        return address
+
     def go(self, url):
         content = self.__fetch_content(url)
         tree = html.fromstring(content)
@@ -67,6 +130,11 @@ class Products():
 
         pagination = self.__extract_pagination(tree)
         products.update(self.__extract_pagination(tree))
-        products['data'] = self.__extract_product_info(tree)
+        # products['data'] = self.__extract_product_info(tree)
+        products['shop'] = self.__extract_shop_info(tree)
 
         return products
+
+products = Products()
+PRODUCT_URL = 'https://wjpfsc.1688.com/page/offerlist.htm?spm=a2615.2177701.0.0.2251061cboauwz'
+print(products.go(PRODUCT_URL))
