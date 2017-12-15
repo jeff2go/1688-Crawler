@@ -71,7 +71,10 @@ class Products():
         title = title_element.get('title')
 
         # 联系人
-        contactor = tree.xpath('//a[@class="membername"]/text()')[0]
+        contactor = ''
+        contactor_element = tree.xpath('//a[@class="membername"]/text()')
+        if (len(contactor_element) > 0):
+            contactor = contactor_element[0].strip()
 
         # 电话
         telphone = ''
@@ -130,11 +133,11 @@ class Products():
 
         pagination = self.__extract_pagination(tree)
         products.update(self.__extract_pagination(tree))
-        # products['data'] = self.__extract_product_info(tree)
+        products['data'] = self.__extract_product_info(tree)
         products['shop'] = self.__extract_shop_info(tree)
 
         return products
 
-products = Products()
-PRODUCT_URL = 'https://wjpfsc.1688.com/page/offerlist.htm?spm=a2615.2177701.0.0.2251061cboauwz'
-print(products.go(PRODUCT_URL))
+# products = Products()
+# PRODUCT_URL = 'https://ywlingpan.1688.com/page/offerlist.htm?pageNum=2'
+# print(products.go(PRODUCT_URL))
