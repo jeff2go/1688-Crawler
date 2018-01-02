@@ -44,8 +44,8 @@ class Product():
 
     # 图片
     def __extract_images(self, tree):
-        image_elements = tree.xpath('//div[@id="dt-tab"]//a[@class="box-img"]/img')
-        return list(map(lambda img_element: img_element.attrib['src'].replace('.60x60', ''), image_elements))[0:5]
+        image_elements = tree.xpath('//div[@id="dt-tab"]//li[contains(@class, "tab-trigger")]')
+        return list(map(lambda img_element: json.loads(img_element.attrib['data-imgs'])['original'], image_elements))
 
     # 规格参数
     def __extract_attributes(self, tree):
