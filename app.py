@@ -4,10 +4,22 @@ from flask import request
 
 from products import Products
 from product import Product
+from categories import Categories
 
 import json
 
 app = Flask(__name__)
+
+@app.route('/crawlers/categories', methods=['GET'])
+def crawl_categories():
+    try:
+        categories = Categories()
+        categories = categories.go(request.args.get('url'))
+        return jsonify(categories)
+    except Exception as e:
+        resp = jsonify({'errcode': 500, 'errmsg': '抓取分类列表异常: ' + str(e)})
+        resp.status_code = 500
+        return resp
 
 @app.route('/crawlers/products', methods=['GET'])
 def crawl_products():
