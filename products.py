@@ -102,23 +102,21 @@ class Products():
 
     def __extract_shop_address(self, tree):
         address_text = tree.xpath('//span[@class="address_title"]/text()')[0]
-        address_text = re.findall('地址：\s+(.+)', address_text)[0]
-        address_text = address_text.replace('  ', ' ')
-        address_list = address_text.split(' ')
-        if (len(address_list) == 3):
-            address = {
-                'country': address_list[0],
-                'state': address_list[1],
-                'city': '',
-                'detail': address_list[2]
-            }
+        address_tuple = re.findall('地址：\s+(.+)\s+(.+)\s+(.+)\s+(.+)\S', address_text)[0]
+        address = {
+            'city': address_tuple[2],
+            'detail': address_tuple[3]
+        }
+        if (address_tuple[0] == ' '):
+            address.update({
+                'country': address_tuple[1],
+                'state': address_tuple[2],
+            })
         else:
-            address = {
-                'country': address_list[0],
-                'state': address_list[1],
-                'city': address_list[2],
-                'detail': address_list[3]
-            }
+            address.update({
+                'country': address_tuple[0],
+                'state': address_tuple[1],
+            })
         return address
 
     def go(self, url):
@@ -139,7 +137,3 @@ class Products():
         products['shop'] = self.__extract_shop_info(tree)
 
         return products
-
-# products = Products()
-# PRODUCT_URL = 'https://hanshuhanshu.1688.com/page/offerlist.htm?spm=a2615.2177701.0.0.3916fb2aYydGj4'
-# print(products.go(PRODUCT_URL))
