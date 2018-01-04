@@ -131,9 +131,13 @@ class Products():
             'data': []
         }
 
-        pagination = self.__extract_pagination(tree)
         products.update(self.__extract_pagination(tree))
         products['data'] = self.__extract_product_info(tree)
         products['shop'] = self.__extract_shop_info(tree)
 
         return products
+
+
+# product = Products()
+# PRODUCT_URL = 'https://ywlingpan.1688.com/page/offerlist.htm?pageNum=1'
+# print(product.go(PRODUCT_URL))
