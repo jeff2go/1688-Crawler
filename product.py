@@ -27,14 +27,26 @@ class Product():
         r = self.http.get(url, headers=self.headers)
         return r.text
 
+    # 过滤产品，可导入义乌购的返回 errcode: 0
+    def __filter(self, content):
+        content = re.findall("<span>预估生产周期</span>", content)
+        if (len(content) > 0):
+            return {
+                'errcode': 101,
+                'errmsg': '此产品为淘工厂类型，暂时无法导入义乌购产品体系'
+            }
+        return {
+            'errcode': 0
+        }
+
     # 基本信息 & SKU
     def __extract_base_and_sku(self, tree):
         script = tree.xpath('//script[contains(., "var iDetailConfig = ")]/text()')[0]
 
         base_str = re.findall("var iDetailConfig = ({[\s\S]*?});", script)[0].replace("'", '"')
-        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'beginAmount', 'refPrice', 'companySiteLink']}
-        sku_str = re.findall('var iDetailData = ({[\s\S]*?});', script)[0]
-        data.update(json.loads(sku_str))
+        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp']}
+        sku_str = re.findall("var iDetailData = ({[\s\S]*?});", script)[0]
+        data.update(json.loads(sku_str.replace("'", '"')))
 
         return data
 
@@ -52,15 +64,22 @@ class Product():
         attribute_features = tree.xpath('//td[@class="de-feature"]/text()')
         attribute_values = tree.xpath('//td[@class="de-value"]/text()')
         return list(map(lambda feature, value: {'feature': feature, 'value': value}, attribute_features, attribute_values))
-    
+
     # 详情描述
     def __extract_description(self, tree):
         description_request_url = tree.xpath('//div[@id="desc-lazyload-container"]')[0].attrib['data-tfs-url']
         content = self.__fetch_content(description_request_url)
-        return content[30:-3].replace('\\', '')
+        content = content[30:-3].replace('\\', '')
+        content = re.sub('href[^>]+', 'href="#none"', content)
+        return content
 
     def go(self, url):
         content = self.__fetch_content(url)
+
+        filterResult = self.__filter(content)
+        if filterResult['errcode'] != 0:
+            return filterResult
+
         tree = html.fromstring(content)
 
         product = self.__extract_base_and_sku(tree)
@@ -72,5 +91,6 @@ class Product():
         return product
 
 # product = Product()
-# PRODUCT_URL = 'https://detail.1688.com/offer/540910263006.html?spm=a2615.7691456.0.0.7efec794f3bE8O'
-# print(product.go(PRODUCT_URL))
+# PRODUCT_URL = 'https://detail.1688.com/offer/550694963156.html'
+# content = product.go(PRODUCT_URL)
+# print(content)

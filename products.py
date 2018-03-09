@@ -81,7 +81,7 @@ class Products():
         telphone_element = tree.xpath('//dl/dt[starts-with(text(), "电")]/following-sibling::dd/text()')
         if (len(telphone_element) > 0):
             telphone = telphone_element[0].strip()
-        
+
         # 移动电话
         mobile = ''
         mobile_element = tree.xpath('//dl/dt[contains(text(), "移动电话")]/following-sibling::dd/text()')
@@ -101,8 +101,15 @@ class Products():
         }
 
     def __extract_shop_address(self, tree):
-        address_text = tree.xpath('//span[@class="address_title"]/text()')[0]
-        address_tuple = re.findall('地址：\s+(.+)\s+(.+)\s+(.+)\s+(.+)\S', address_text)[0]
+        addressArray = tree.xpath('//span[@class="address_title"]/text()')
+        if (len(addressArray) == 0):
+            return {
+                'country': '',
+                'state': '',
+                'city': '',
+                'detail': '',
+            }
+        address_tuple = re.findall('地址：\s+(.+)\s+(.+)\s+(.+)\s+(.+)\S', addressArray[0])[0]
         address = {
             'city': address_tuple[2],
             'detail': address_tuple[3]
@@ -139,5 +146,5 @@ class Products():
 
 
 # product = Products()
-# PRODUCT_URL = 'https://ywlingpan.1688.com/page/offerlist.htm?pageNum=1'
+# PRODUCT_URL = 'https://ljd19811215.1688.com/page/offerlist.htm'
 # print(product.go(PRODUCT_URL))
