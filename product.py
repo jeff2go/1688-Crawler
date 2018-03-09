@@ -44,11 +44,20 @@ class Product():
         script = tree.xpath('//script[contains(., "var iDetailConfig = ")]/text()')[0]
 
         base_str = re.findall("var iDetailConfig = ({[\s\S]*?});", script)[0].replace("'", '"')
-        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp']}
+        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'isSKUOffer', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp']}
         sku_str = re.findall("var iDetailData = ({[\s\S]*?});", script)[0]
         data.update(json.loads(sku_str.replace("'", '"')))
 
         return data
+
+    # 阶梯价
+    def __extract_price_range(self, tree):
+        items = tree.xpath('//td[@data-range]')
+        price_range = []
+        for item in items:
+            price_range_item = json.loads(item.attrib['data-range'])
+            price_range.append([int(price_range_item['begin']), float(price_range_item['price'])])
+        return price_range
 
     # 标题
     def __extract_title(self, tree):
@@ -76,6 +85,7 @@ class Product():
     def go(self, url):
         content = self.__fetch_content(url)
 
+        # 过滤不符合义乌购加个体系的产品
         filterResult = self.__filter(content)
         if filterResult['errcode'] != 0:
             return filterResult
@@ -83,6 +93,13 @@ class Product():
         tree = html.fromstring(content)
 
         product = self.__extract_base_and_sku(tree)
+        if (product['isSKUOffer'] == 'false'):
+            # 抓取 阶梯价
+            price_range = self.__extract_price_range(tree)
+            if (len(price_range) > 0):
+                product['isRangePriceSku'] = 'true'
+                product['sku'] = {"priceRange": price_range, "skuProps": [], "canBookCount": "100"}
+
         product['title'] = self.__extract_title(tree)
         product['images'] = self.__extract_images(tree)
         product['attributes'] = self.__extract_attributes(tree)
@@ -91,6 +108,6 @@ class Product():
         return product
 
 # product = Product()
-# PRODUCT_URL = 'https://detail.1688.com/offer/550694963156.html'
+# PRODUCT_URL = 'https://detail.1688.com/offer/39685445050.html?smToken=c282e6e9a31649d1946a89ad39edac3e&smSign=t1F6Kae2G2DAAaxV84z65w%3D%3D'
 # content = product.go(PRODUCT_URL)
 # print(content)
