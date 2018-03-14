@@ -58,6 +58,15 @@ class Product():
             price_range_item = json.loads(item.attrib['data-range'])
             price_range.append([int(price_range_item['begin']), float(price_range_item['price'])])
         return price_range
+    
+    # 阶梯价的可订购数量
+    def __extract_can_book_count_based_on_price_range(self, tree):
+        text_elements = tree.xpath('//div[contains(@class, "obj-amount")]//span[@class="total"]/text()')
+        if (len(text_elements) > 0):
+            res = re.findall('\d+', text_elements[0])
+            if (len(res) > 0):
+                return res[0]
+        return 100
 
     # 标题
     def __extract_title(self, tree):
@@ -98,7 +107,8 @@ class Product():
             price_range = self.__extract_price_range(tree)
             if (len(price_range) > 0):
                 product['isRangePriceSku'] = 'true'
-                product['sku'] = {"priceRange": price_range, "skuProps": [], "canBookCount": "100"}
+                canBookCount = self.__extract_can_book_count_based_on_price_range(tree)
+                product['sku'] = {"priceRange": price_range, "skuProps": [], "canBookCount": str(canBookCount)}
 
         product['title'] = self.__extract_title(tree)
         product['images'] = self.__extract_images(tree)
