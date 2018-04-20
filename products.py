@@ -52,7 +52,7 @@ class Products():
         price_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="price"]/em/text()')
         base_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="title"]/a')
 
-        def extract_product(price, other):
+        def extract_product(other, price):
             url = other.get('href')
             return {
                 'id': int(re.findall('offer/(\d+)', url)[0]),
@@ -61,7 +61,7 @@ class Products():
                 'url': url
             }
 
-        return list(map(extract_product, price_elements, base_elements))
+        return list(map(extract_product, base_elements, price_elements))
 
     def __extract_shop_info(self, tree):
         shop_url_element = tree.xpath('//div[contains(@class, "base-info")]//a')[0]
