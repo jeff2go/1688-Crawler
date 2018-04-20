@@ -24,7 +24,7 @@ class Products():
 
     # 分页数据
     def __extract_pagination(self, tree):
-        pagination_htmls = tree.xpath('//div[@class="wp-paging-unit"]/ul')
+        pagination_htmls = tree.xpath('//div[contains(@class, "wp-paging-unit")]/ul')
         if (len(pagination_htmls) > 0):
             pagination_html = pagination_htmls[0]
         else:
@@ -149,7 +149,6 @@ class Products():
 
         return products
 
-
-product = Products()
-PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
-print(product.go(PRODUCT_URL))
+# product = Products()
+# PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
+# print(product.go(PRODUCT_URL))
