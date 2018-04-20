@@ -52,16 +52,21 @@ class Products():
         price_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="price"]/em/text()')
         base_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="title"]/a')
 
-        def extract_product(other, price):
-            url = other.get('href')
-            return {
-                'id': int(re.findall('offer/(\d+)', url)[0]),
-                'title': other.get('title'),
-                'price': float(price),
-                'url': url
-            }
+        product_items = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]')
+        products = []
+        for product_item in product_items:
+            price_element = product_item.xpath('div[@class="price"]/em/text()')
+            if price_element:
+                base_element = product_item.xpath('div[@class="title"]/a')[0]
+                url = base_element.get('href')
+                products.append({
+                    'id': int(re.findall('offer/(\d+)', url)[0]),
+                    'title': base_element.get('title'),
+                    'price': float(price_element[0]),
+                    'url': url
+                })
 
-        return list(map(extract_product, base_elements, price_elements))
+        return products
 
     def __extract_shop_info(self, tree):
         shop_url_element = tree.xpath('//div[contains(@class, "base-info")]//a')[0]
@@ -145,6 +150,6 @@ class Products():
         return products
 
 
-# product = Products()
-# PRODUCT_URL = 'https://ljd19811215.1688.com/page/offerlist.htm'
-# print(product.go(PRODUCT_URL))
+product = Products()
+PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
+print(product.go(PRODUCT_URL))
