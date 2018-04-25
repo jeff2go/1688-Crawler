@@ -24,7 +24,7 @@ class Products():
 
     # 分页数据
     def __extract_pagination(self, tree):
-        pagination_htmls = tree.xpath('//div[contains(@class, "wp-paging-unit")]/ul')
+        pagination_htmls = tree.xpath('//div[contains(@class, "wp-paging-unit")]')
         if (len(pagination_htmls) > 0):
             pagination_html = pagination_htmls[0]
         else:
@@ -35,9 +35,23 @@ class Products():
                 'per_page': 20,
                 'data': []
             }
-        total = int(tree.xpath('//em[@class="offer-count"]/text()')[0])
-        current_page = int(tree.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
-        last_page = int(tree.xpath('//em[@class="page-count"]/text()')[0])
+        if 'new-pagination' in pagination_html.get('class'):
+            current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
+            last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
+            per_page = 16
+            total = 16 * last_page
+            return {
+                'total': total,
+                'current_page': current_page,
+                'last_page': last_page,
+                'per_page': per_page,
+                'notice': '此分页产品总数total不一定准确',
+                'data': []
+            }
+        else:
+            total = int(pagination_html.xpath('//em[@class="offer-count"]/text()')[0])
+            current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
+            last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
         per_page = 20
         return {
             'total': total,
@@ -49,15 +63,12 @@ class Products():
 
     # 产品数据
     def __extract_product_info(self, tree):
-        price_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="price"]/em/text()')
-        base_elements = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]//div[@class="title"]/a')
-
-        product_items = tree.xpath('//div[@class="wp-offerlist-windows"]//li[@data-prop]')
+        product_items = tree.xpath('//div[contains(@class, "wp-offerlist-windows")]//ul[contains(@class, "offer-list-row")]/li[@*]')
         products = []
         for product_item in product_items:
-            price_element = product_item.xpath('div[@class="price"]/em/text()')
+            price_element = product_item.xpath('//div[contains(@class, "price")]/em/text()')
             if price_element:
-                base_element = product_item.xpath('div[@class="title"]/a')[0]
+                base_element = product_item.xpath('//a[@class="title-link"]')[0]
                 url = base_element.get('href')
                 products.append({
                     'id': int(re.findall('offer/(\d+)', url)[0]),
