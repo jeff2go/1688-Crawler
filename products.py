@@ -36,8 +36,8 @@ class Products():
                 'data': []
             }
         if 'new-pagination' in pagination_html.get('class'):
-            current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
-            last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
+            current_page = int(pagination_html.xpath('.//li[@class="pagination"]/a[@class="current"]/text()')[0])
+            last_page = int(pagination_html.xpath('.//em[@class="page-count"]/text()')[0])
             per_page = 16
             total = 16 * last_page
             return {
@@ -49,9 +49,9 @@ class Products():
                 'data': []
             }
         else:
-            total = int(pagination_html.xpath('//em[@class="offer-count"]/text()')[0])
-            current_page = int(pagination_html.xpath('//li[@class="pagination"]/a[@class="current"]/text()')[0])
-            last_page = int(pagination_html.xpath('//em[@class="page-count"]/text()')[0])
+            total = int(pagination_html.xpath('.//em[@class="offer-count"]/text()')[0])
+            current_page = int(pagination_html.xpath('.//li[@class="pagination"]/a[@class="current"]/text()')[0])
+            last_page = int(pagination_html.xpath('.//em[@class="page-count"]/text()')[0])
         per_page = 20
         return {
             'total': total,
@@ -66,9 +66,9 @@ class Products():
         product_items = tree.xpath('//div[contains(@class, "wp-offerlist-windows")]//ul[contains(@class, "offer-list-row")]/li[@*]')
         products = []
         for product_item in product_items:
-            price_element = product_item.xpath('div[contains(@class, "price")]/em/text()')
-            if price_element:
-                base_element = product_item.xpath('//a[@class="title-link"]')[0]
+            price_element = product_item.xpath('.//div[contains(@class, "price")]//em/text()')
+            if price_element and '价格' not in price_element[0]:
+                base_element = product_item.xpath('.//a[@class="title-link"]')[0]
                 url = base_element.get('href')
                 products.append({
                     'id': int(re.findall('offer/(\d+)', url)[0]),
