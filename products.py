@@ -66,7 +66,7 @@ class Products():
         product_items = tree.xpath('//div[contains(@class, "wp-offerlist-windows")]//ul[contains(@class, "offer-list-row")]/li[@*]')
         products = []
         for product_item in product_items:
-            price_element = product_item.xpath('//div[contains(@class, "price")]/em/text()')
+            price_element = product_item.xpath('div[contains(@class, "price")]/em/text()')
             if price_element:
                 base_element = product_item.xpath('//a[@class="title-link"]')[0]
                 url = base_element.get('href')
@@ -160,6 +160,6 @@ class Products():
 
         return products
 
-# product = Products()
-# PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
-# print(product.go(PRODUCT_URL))
+product = Products()
+PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
+print(product.go(PRODUCT_URL))
