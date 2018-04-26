@@ -18,13 +18,12 @@ class Product():
     }
 
     def __fetch_content(self, url):
-        # proxy = {
-        #     'http': 'http://117.85.105.170:808',
-        #     'https': 'https://117.85.105.170:808'
-        # }
-        # r = self.http.get(url, headers=self.headers, proxies=proxy)
         self.http = self.http or requests.session()
-        r = self.http.get(url, headers=self.headers)
+        proxy = {
+            'http': 'http://221.130.253.135:8090',
+        }
+        r = self.http.get(url, headers=self.headers, proxies=proxy)
+        # r = self.http.get(url, headers=self.headers)
         return r.text
 
     # 过滤产品，可导入义乌购的返回 errcode: 0
@@ -117,7 +116,7 @@ class Product():
 
         return product
 
-# product = Product()
-# PRODUCT_URL = 'https://detail.1688.com/offer/523969536038.html'
-# content = product.go(PRODUCT_URL)
-# print(content)
+product = Product()
+PRODUCT_URL = 'https://detail.1688.com/offer/523969536038.html'
+content = product.go(PRODUCT_URL)
+print(content)
