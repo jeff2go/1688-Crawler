@@ -19,11 +19,11 @@ class Product():
 
     def __fetch_content(self, url):
         self.http = self.http or requests.session()
-        proxy = {
-            'http': 'http://221.130.253.135:8090',
-        }
-        r = self.http.get(url, headers=self.headers, proxies=proxy)
-        # r = self.http.get(url, headers=self.headers)
+        # proxy = {
+        #     'http': 'http://221.130.253.135:8090',
+        # }
+        # r = self.http.get(url, headers=self.headers, proxies=proxy)
+        r = self.http.get(url, headers=self.headers)
         return r.text
 
     # 过滤产品，可导入义乌购的返回 errcode: 0
