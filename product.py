@@ -43,7 +43,7 @@ class Product():
         script = tree.xpath('//script[contains(., "var iDetailConfig = ")]/text()')[0]
 
         base_str = re.findall("var iDetailConfig = ({[\s\S]*?});", script)[0].replace("'", '"')
-        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'isSKUOffer', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp']}
+        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'isSKUOffer', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp', 'mkcActivityId']}
         sku_str = re.findall("var iDetailData = ({[\s\S]*?});", script)[0]
         data.update(json.loads(sku_str.replace("'", '"')))
 
@@ -116,7 +116,7 @@ class Product():
 
         return product
 
-product = Product()
-PRODUCT_URL = 'https://detail.1688.com/offer/523969536038.html'
-content = product.go(PRODUCT_URL)
-print(content)
+# product = Product()
+# PRODUCT_URL = 'https://detail.1688.com/offer/523969536038.html'
+# content = product.go(PRODUCT_URL)
+# print(content)
