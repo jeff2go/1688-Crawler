@@ -1,6 +1,5 @@
 import requests
 from requests.exceptions import ConnectionError
-import numpy
 from time import sleep
 
 user_agents = [
