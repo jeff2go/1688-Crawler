@@ -17,7 +17,7 @@ class Product():
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
     }
 
-    def __fetch_content(self, url):·
+    def __fetch_content(self, url):
         self.http = self.http or requests.session()
         # proxy = {
         #     'http': 'http://221.130.253.135:8090',
