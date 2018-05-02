@@ -160,6 +160,6 @@ class Products():
 
         return products
 
-product = Products()
-PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
-print(product.go(PRODUCT_URL))
+# product = Products()
+# PRODUCT_URL = 'https://yifanzz.1688.com/page/offerlist.htm'
+# print(product.go(PRODUCT_URL))
