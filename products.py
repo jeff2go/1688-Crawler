@@ -23,7 +23,7 @@ class Products:
         return r.text
 
     # 分页数据
-    def __extract_pagination(self, tree·):
+    def __extract_pagination(self, tree):
         pagination_html = tree.xpath('//div[contains(@class, "wp-paging-unit")]')
         if len(pagination_html) > 0:
             pagination_html = pagination_html[0]
