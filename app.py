@@ -6,13 +6,13 @@ from products import Products
 from product import Product
 from categories import Categories
 
-import json
-
 app = Flask(__name__)
+
 
 @app.route('/', methods=['GET'])
 def index():
     return '<h1 style="text-align: center; margin-top: 100px;">1688-Crawler based on Flask</h1>'
+
 
 @app.route('/crawlers/categories', methods=['GET'])
 def crawl_categories():
@@ -25,6 +25,7 @@ def crawl_categories():
         resp.status_code = 500
         return resp
 
+
 @app.route('/crawlers/products', methods=['GET'])
 def crawl_products():
     try:
@@ -36,6 +37,7 @@ def crawl_products():
         resp.status_code = 500
         return resp
 
+
 @app.route('/crawlers/product', methods=['GET'])
 def crawl_product():
     try:
@@ -46,6 +48,7 @@ def crawl_product():
         resp = jsonify({'errcode': 500, 'errmsg': '抓取产品异常: ' + str(e)})
         resp.status_code = 500
         return resp
+
 
 if __name__ == '__main__':
     app.run('127.0.0.1', 8080)

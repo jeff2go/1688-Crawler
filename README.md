@@ -1,10 +1,10 @@
-# 基于 Flask 开发的阿里巴巴产品抓取应用
+# 1688-Crawler
 
-Based on Python3.x
+Based on Flask
 
-## Installation
+## Install
 
-Install the requirements with pip:
+Install requirements with pip:
 
 ```sh
 $ pip install -r requirements.txt
@@ -13,7 +13,7 @@ $ pip install -r requirements.txt
 ## Run
 
 ```python
-python3 app.py
+python app.py
 ```
 
-Open browser with http://127.0.0.1:8080
+Open http://127.0.0.1:8080 in a browser.
