@@ -1,35 +1,21 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 抓取1688产品数据
-'''
+"""
 
 import re
 import json
 
-import requests
 from lxml import html
+from spider import get_html
 
-class Product():
-    http = None
-    headers = {
-        'cookie': '_uab_collina=151151417932957227926525; CNZZDATA1253659577=1338067901-1520570405-%7C1521445346; cna=JrVoE8ZJpnICAX1wLFvNRBbJ; ali_ab=125.112.44.91.1524746036086.3; hng=CN%7Czh-CN%7CCNY%7C156; JSESSIONID=5e9Zopf-18eZuOuJGUftGNmQg4-8yTxqqQ-pUV; cookie2=149bc39dfa15e6938caf2e94e7a5a5e1; t=432da7506670e12f3d241952bf1c6180; _tb_token_=ee373d7d3887f; __cn_logon__=true; ali_apache_tracktmp=c_w_signed=Y; LoginUmid=cysOIPISIfLblw1%2BC8W%2FOtAmd2wHu0Ta0KrmK37pobFTG4BC5yy9jw%3D%3D; ctoken=QVO5JqMxPXts5ULtYlfFnaga; cn_m_s=D6j4EflXCl5bq5cskw6AxRWLu9W0l7/sqBKCCPTh39j1byNOqQsQCSJLzol0mvF0; ali-ss=eyJtZW1iZXJJZCI6Inlpd3V5aWhhbiIsInVzZXJJZCI6Ijk1MjQzNDc1MCIsImxvZ2luSWQiOiLkuIDmtrXliLbnur/ljoIiLCJzaWQiOiIxNDliYzM5ZGZhMTVlNjkzOGNhZjJlOTRlN2E1YTVlMSIsImVjb2RlIjoiIiwibG9naW5TdGF0dXNSZXRNc2ciOm51bGwsImxvZ2luTWVzc2FnZUVycm9yIjpudWxsLCJsb2dpbkVycm9yVXNlck5hbWUiOm51bGwsImNoZWNrY29kZSI6bnVsbCwic2VjcmV0IjoiVEM5aWxOVEpGRGNBRllmQ1FrV1l3QnUwIiwiX2V4cGlyZSI6MTUyNTMxNDAxNzcyNywiX21heEFnZSI6ODY0MDAwMDB9; webp=1; _m_h5_tk=70b125e2d19a4e735f32a64a22f50a07_1525229689623; _m_h5_tk_enc=db1c3a888ddea51ca0bb04d9d6ad37bb; _umdata=65F7F3A2F63DF02042CD40C8CB341A75B45FEEB2FA6EFB040032BDD8266423B49B6F37ADA64137D5CD43AD3E795C914C16249D7C076616EAAE7C2424C638FEE2; ad_prefer="2018/05/02 14:48:55"; h_keys="%u73a9%u5177"; cookie1=BYk5E01IMRgOv9lwa6Q%2F9WEQbcc4WsUiX%2BpLMDqayxo%3D; cookie17=UNcNPbcuK3gM; sg=011; csg=42d051cf; lid=%E4%B9%89%E4%B9%8C2010; __cn_logon_id__=%E4%B9%89%E4%B9%8C2010; ali_apache_track=c_mid=b2b-375685501ncisr|c_lid=%E4%B9%89%E4%B9%8C2010|c_ms=1|c_mt=3; unb=375685501; tbsnid=qc%2Fp6A90PYpzfhqbSCUKNMwBvj6COLpBKP%2BKLUitS%2B06sOlEpJKl9g%3D%3D; cn_tmp="Z28mC+GqtZ1zvhIUrY34IWqE1NUiJUbOSnnKfF/EKmUT6JpKURQFRzQyDQRqKjUW+wz6NLz10jFwnSWAw3EYMNHFSYlrqLYigWhihClZrhxnb7+MjupilRdjbwJe08tPFmkyku3yyUEETmUqccb691HchTC+m3ibDFZw+Bj+pm7cWivmjpORmkVZ3FXGXcU8IhUhmvEWZkVU79tFP5M5QRFtQ8zzVZC83KTGdEML8E+EaccZZFWmOILZHmIbATJN"; login=kFeyVBJLQQI%3D; userID=4xajfL3DQrHncUpnQZX0TYc0vWcisnqH2H6AxmPH6ic6sOlEpJKl9g%3D%3D; _nk_=Y3E2Stm9IjQ6sOlEpJKl9g%3D%3D; userIDNum=jH7Y8ZWD7p1TAhztWl1ziA%3D%3D; last_mid=b2b-375685501ncisr; __last_loginid__=%E4%B9%89%E4%B9%8C2010; _cn_slid_=17PB6qDL%2Bc; _csrf_token=1525243749827; _is_show_loginId_change_block_=b2b-375685501ncisr_false; _show_force_unbind_div_=b2b-375685501ncisr_false; _show_sys_unbind_div_=b2b-375685501ncisr_false; _show_user_unbind_div_=b2b-375685501ncisr_false; __rn_alert__=false; alicnweb=homeIdttS%3D78994739529372997155561416241427710433%7Ctouch_tb_at%3D1525243732696%7ChomeIdttSAction%3Dtrue%7Clastlogonid%3D%25E4%25B9%2589%25E4%25B9%258C2010; _tmp_ck_0="Us6kfQ%2FxEOM2KS7xOr8H1h6lhk%2BBUUKimSetj3MyBh5PpERiChM7NhzEpQ%2BeSSQ2CfDdl3xdGIP%2FTi5%2FTpd36N0m5btqiXLJC7CgXSRJGZwEOfQGa9tPUQWwwxTw1K6k%2B%2BWBWIcdZGkvSj89e6Uop2UAUG8jCJJ9CoKaGe0xVhtVGbHmU23MrOf%2BmGLKBbNiAzyWzJBtBOQqbJ7Yx5MssSanKAxmmcpscr1EaXt%2FHb21qhv%2FcbJQPoG0uWcOOXhou%2FhI4G6lw7NEMur50rnnXUb78j1KAWHTPlB%2FqB8ZuvgI%2BN5HkSdf6tc0ySq8OG6w%2BEYGDsATeg8jH1mVZY6S1oBGb5WEHj4gM5tD657dslhLayGAJsb9Adkmlv95XFxhiL%2BqaX8xJc2Jg0C94P1pmpIXUvr%2FOsrJStVbTWhVd9ZK78dABvzODsrksrjNNYkKe%2BUfmxznncVeRaj8sDL1A3Mf6KPydIiyAVu%2Bh53pmrAWtGot3KBpndYmnmmMHKAWvhbT%2FUg9gAXQ1W3u%2Fc0a1OpDoaHA%2BRkVU9yZTwLlcdxl7tQY91BMMA%3D%3D"; isg=BCMjA0i2feOItDLRvHW24FZTsmHHHonpzwO1UFWAfALwlEO23ehHqgHmimSaNA9S',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36'
-    }
 
-    def __fetch_content(self, url):
-        self.http = self.http or requests.session()
-        # proxy = {
-        #     'http': 'http://221.130.253.135:8090',
-        # }
-        # r = self.http.get(url, headers=self.headers, proxies=proxy)
-        r = self.http.get(url, headers=self.headers)
-        return r.text
-
+class Product:
     # 过滤产品，可导入义乌购的返回 errcode: 0
     def __filter(self, content):
         content = re.findall("<span>预估生产周期</span>", content)
-        if (len(content) > 0):
+        if len(content) > 0:
             return {
                 'errcode': 101,
                 'errmsg': '此产品为淘工厂类型，暂时无法导入义乌购产品体系'
@@ -43,7 +29,9 @@ class Product():
         script = tree.xpath('//script[contains(., "var iDetailConfig = ")]/text()')[0]
 
         base_str = re.findall("var iDetailConfig = ({[\s\S]*?});", script)[0].replace("'", '"')
-        data = {k:v for k,v in json.loads(base_str).items() if k in ['offerid', 'unit', 'isRangePriceSku', 'isSKUOffer', 'beginAmount', 'refPrice', 'companySiteLink', 'isTp', 'mkcActivityId']}
+        data = {k: v for k, v in json.loads(base_str).items() if
+                k in ['offerid', 'unit', 'isRangePriceSku', 'isSKUOffer', 'beginAmount', 'refPrice', 'companySiteLink',
+                      'isTp', 'mkcActivityId']}
         sku_str = re.findall("var iDetailData = ({[\s\S]*?});", script)[0]
         data.update(json.loads(sku_str.replace("'", '"')))
 
@@ -57,13 +45,13 @@ class Product():
             price_range_item = json.loads(item.attrib['data-range'])
             price_range.append([int(price_range_item['begin']), float(price_range_item['price'])])
         return price_range
-    
+
     # 阶梯价的可订购数量
     def __extract_can_book_count_based_on_price_range(self, tree):
         text_elements = tree.xpath('//div[contains(@class, "obj-amount")]//span[@class="total"]/text()')
-        if (len(text_elements) > 0):
+        if len(text_elements) > 0:
             res = re.findall('\d+', text_elements[0])
-            if (len(res) > 0):
+            if len(res) > 0:
                 return res[0]
         return 100
 
@@ -80,34 +68,35 @@ class Product():
     def __extract_attributes(self, tree):
         attribute_features = tree.xpath('//td[@class="de-feature"]/text()')
         attribute_values = tree.xpath('//td[@class="de-value"]/text()')
-        return list(map(lambda feature, value: {'feature': feature, 'value': value}, attribute_features, attribute_values))
+        return list(
+            map(lambda feature, value: {'feature': feature, 'value': value}, attribute_features, attribute_values))
 
     # 详情描述
     def __extract_description(self, tree):
         description_request_url = tree.xpath('//div[@id="desc-lazyload-container"]')[0].attrib['data-tfs-url']
-        content = self.__fetch_content(description_request_url)
+        content = get_html(description_request_url)
         content = content[30:-3].replace('\\', '')
         content = re.sub('href[^>]+', 'href="#none"', content)
         return content
 
     def go(self, url):
-        content = self.__fetch_content(url)
+        content = get_html(url)
 
         # 过滤不符合义乌购加个体系的产品
-        filterResult = self.__filter(content)
-        if filterResult['errcode'] != 0:
-            return filterResult
+        filter_result = self.__filter(content)
+        if filter_result['errcode'] != 0:
+            return filter_result
 
         tree = html.fromstring(content)
 
         product = self.__extract_base_and_sku(tree)
-        if (product['isSKUOffer'] == 'false'):
+        if product['isSKUOffer'] == 'false':
             # 抓取 阶梯价
             price_range = self.__extract_price_range(tree)
-            if (len(price_range) > 0):
+            if len(price_range) > 0:
                 product['isRangePriceSku'] = 'true'
-                canBookCount = self.__extract_can_book_count_based_on_price_range(tree)
-                product['sku'] = {"priceRange": price_range, "skuProps": [], "canBookCount": str(canBookCount)}
+                can_book_count = self.__extract_can_book_count_based_on_price_range(tree)
+                product['sku'] = {"priceRange": price_range, "skuProps": [], "canBookCount": str(can_book_count)}
 
         product['title'] = self.__extract_title(tree)
         product['images'] = self.__extract_images(tree)
@@ -116,7 +105,15 @@ class Product():
 
         return product
 
-# product = Product()
-# PRODUCT_URL = 'https://detail.1688.com/offer/523969536038.html'
-# content = product.go(PRODUCT_URL)
-# print(content)
+
+def test():
+    product = Product()
+    product_url = 'https://detail.1688.com/offer/523969536038.html'
+    for i in range(1, 1001):
+        print(i, 'going')
+        content = product.go(product_url)
+        print(content or None)
+
+
+if __name__ == '__main__':
+    test()
