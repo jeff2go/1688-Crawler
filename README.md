@@ -13,7 +13,7 @@ $ pip install -r requirements.txt
 ## Run
 
 ```python
-python app.py
+python run.py
 ```
 
 Open http://127.0.0.1:8080 in a browser.

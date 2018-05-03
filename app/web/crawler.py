@@ -1,20 +1,12 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
+from flask import jsonify, request
 
-from products import Products
-from product import Product
-from categories import Categories
-
-app = Flask(__name__)
+from . import web
+from app.spiders.product import Product
+from app.spiders.products import Products
+from app.spiders.categories import Categories
 
 
-@app.route('/', methods=['GET'])
-def index():
-    return '<h1 style="text-align: center; margin-top: 100px;">1688-Crawler based on Flask</h1>'
-
-
-@app.route('/crawlers/categories', methods=['GET'])
+@web.route('/crawlers/categories', methods=['GET'])
 def crawl_categories():
     try:
         categories = Categories()
@@ -26,7 +18,7 @@ def crawl_categories():
         return resp
 
 
-@app.route('/crawlers/products', methods=['GET'])
+@web.route('/crawlers/products', methods=['GET'])
 def crawl_products():
     try:
         products = Products()
@@ -38,7 +30,7 @@ def crawl_products():
         return resp
 
 
-@app.route('/crawlers/product', methods=['GET'])
+@web.route('/crawlers/product', methods=['GET'])
 def crawl_product():
     try:
         product = Product()
@@ -48,7 +40,3 @@ def crawl_product():
         resp = jsonify({'errcode': 500, 'errmsg': '抓取产品异常: ' + str(e)})
         resp.status_code = 500
         return resp
-
-
-if __name__ == '__main__':
-    app.run('127.0.0.1', 8080)

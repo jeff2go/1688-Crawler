@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 抓取1688产品列表数据
 """
@@ -8,7 +6,7 @@ import re
 
 from lxml import html
 
-from spider import get_html
+from app.libs.spider import get_html
 
 
 class Products:
