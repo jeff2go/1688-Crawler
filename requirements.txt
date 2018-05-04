@@ -1,6 +1,6 @@
 flask
 lxml
 requests
-gunicorn
-Fabric3==1.12.0.post1
 numpy
+pytest
+coverage
