@@ -6,19 +6,13 @@ def register_web_blueprint(app):
     app.register_blueprint(web)
 
 
-def create_app(config=None):
+def create_app():
     app = Flask(__name__)
 
     # load default configuration
-    app.config.from_object('app.settings')
+    app.config.from_object('app.config')
 
     register_web_blueprint(app)
-
-    if config is not None:
-        if isinstance(config, dict):
-            app.config.update(config)
-        elif config.endswith('.py'):
-            app.config.from_pyfile(config)
 
     if not app.debug:
         import logging
