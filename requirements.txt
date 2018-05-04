@@ -1,6 +1,0 @@
-flask
-lxml
-requests
-numpy
-pytest
-coverage
