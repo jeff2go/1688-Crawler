@@ -1,19 +1,20 @@
 # 1688-Crawler
 
-Based on Flask
+
+Based on Flask, require python3.6
 
 ## Install
 
-Install requirements with pip:
+Install requirements by pipenv:
 
 ```sh
-$ pip install -r requirements.txt
+$ pipenv install
 ```
 
 ## Run
 
 ```python
-python run.py
+pipenv run python run.py
 ```
 
 Open http://127.0.0.1:8080 in a browser.
