@@ -56,7 +56,7 @@ class RedisClient(object):
             return self.db.zincrby(self.redis_key, value, -1)
         else:
             print('值', value, '当前分数', score, '移除')
-            return self.db.zrem(self.redis_key, value)
+            # return self.db.zrem(self.redis_key, value)
 
     def exists(self, value):
         """
