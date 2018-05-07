@@ -18,7 +18,6 @@ class Categories:
         sub_categories = []
         for item in link_elements:
             href = item.attrib['href']
-            print(href)
             ids = re.findall('_(([\d-]+)_?(\d+)*)\.htm', href)[0]
             category = {
                 'id': ids[1],
