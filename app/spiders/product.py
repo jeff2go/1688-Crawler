@@ -6,7 +6,7 @@ import re
 import json
 
 from lxml import html
-from app.libs.spider import get_html
+from app.spiders.spider import get_html
 
 
 class Product:
@@ -102,16 +102,3 @@ class Product:
         product['description'] = self.__extract_description(tree)
 
         return product
-
-
-def test():
-    product = Product()
-    product_url = 'https://detail.1688.com/offer/523969536038.html'
-    for i in range(1, 1001):
-        print(i, 'going')
-        content = product.go(product_url)
-        print(content or None)
-
-
-if __name__ == '__main__':
-    test()

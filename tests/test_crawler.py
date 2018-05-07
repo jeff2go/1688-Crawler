@@ -1,6 +1,7 @@
 import pytest
 
 
+@pytest.mark.fast
 def test_crawl_categories(client):
     url = 'https://ywlingpan.1688.com/page/offerlist.htm'
     rv = client.get('/crawlers/categories', query_string=dict(url=url))
@@ -9,6 +10,7 @@ def test_crawl_categories(client):
     assert 'ywlingpan' == json_data['shop']['id']
 
 
+@pytest.mark.fast
 def test_crawl_categories_with_exception(client):
     url = 'https://ywlingpan.1688.com/page/offerlis'
     rv = client.get('/crawlers/categories', query_string=dict(url=url))
@@ -16,6 +18,7 @@ def test_crawl_categories_with_exception(client):
     assert 'errcode' in rv.get_json()
 
 
+@pytest.mark.fast
 def test_crawl_products(client):
     url = 'https://ywlingpan.1688.com/page/offerlist.htm?pageNum=1'
     rv = client.get('/crawlers/products', query_string=dict(url=url))
@@ -24,6 +27,7 @@ def test_crawl_products(client):
     assert 'ywlingpan' == json_data['shop']['id']
 
 
+@pytest.mark.fast
 def test_crawl_products_with_exception(client):
     url = 'https://ywlingpan.1688.com/page/offerlist'
     rv = client.get('/crawlers/products', query_string=dict(url=url))
@@ -31,6 +35,7 @@ def test_crawl_products_with_exception(client):
     assert 'errcode' in rv.get_json()
 
 
+@pytest.mark.fast
 def test_crawl_product(client):
     url = 'https://detail.1688.com/offer/1152061078.html'
     rv = client.get('/crawlers/product', query_string=dict(url=url))
@@ -39,6 +44,7 @@ def test_crawl_product(client):
     assert '1152061078' == json_data['offerid']
 
 
+@pytest.mark.fast
 def test_crawl_product_with_exception(client):
     url = 'https://detail.1688.com/offer/1152061078'
     rv = client.get('/crawlers/product', query_string=dict(url=url))

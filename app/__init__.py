@@ -10,7 +10,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     # load default configuration
-    app.config.from_object('app.config')
+    app.config.from_object('app.settings')
     if test_config is not None:
         app.config.from_mapping(test_config)
 

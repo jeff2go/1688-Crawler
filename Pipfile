@@ -9,6 +9,8 @@ requests = "*"
 lxml = "*"
 numpy = "*"
 gunicorn = "*"
+redis = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pytest = "*"

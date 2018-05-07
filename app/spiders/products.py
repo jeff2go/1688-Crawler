@@ -6,7 +6,7 @@ import re
 
 from lxml import html
 
-from app.libs.spider import get_html
+from app.spiders.spider import get_html
 
 
 class Products:
