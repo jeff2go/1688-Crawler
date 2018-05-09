@@ -51,10 +51,11 @@ class RedisClient(object):
         """
         score = self.db.zscore(self.redis_key, value)
         if score and score > MIN_SCORE:
-            print('值', value, '当前分数', score, '减1')
+            # print('值', value, '当前分数', score, '减1')
             return self.db.zincrby(self.redis_key, value, -1)
         else:
-            print('值', value, '当前分数', score, '移除')
+            pass
+            # print('值', value, '当前分数', score, '移除')
             # return self.db.zrem(self.redis_key, value)
 
     def exists(self, value):
