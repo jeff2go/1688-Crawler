@@ -11,7 +11,12 @@ def get_html(url, count=1):
     max_count = 5
     headers = {
         'Cookie': cookie,
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1 Safari/605.1.15',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36',
+        'cache-control': 'no-cache',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'pragma': 'no-cache',
+        'upgrade-insecure-requests': '1',
     }
     print('Try Count', count)
     if count >= max_count:
