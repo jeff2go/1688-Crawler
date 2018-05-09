@@ -8,7 +8,7 @@ cookie = redis.random() or 'cna=SkXXEeTNmyUCATy/9iZ5q4MR; ptid=SkXXEeTNmyUCATy/9
 
 def get_html(url, count=1):
     global cookie, redis
-    max_count = 5
+    max_count = 10
     headers = {
         'Cookie': cookie,
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36',
