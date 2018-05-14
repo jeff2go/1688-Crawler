@@ -11,6 +11,7 @@ numpy = "*"
 gunicorn = "*"
 redis = "*"
 python-dotenv = "*"
+wtforms = "*"
 
 [dev-packages]
 pytest = "*"

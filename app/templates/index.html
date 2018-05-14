@@ -2,9 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Proxy Cookie</title>
 </head>
 <body>
-$END$
+<div class='container'>
+    <div class="row">
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                {% if message %}
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+        {% if form and form.errors %}
+            {% for key, error in form.errors.items() %}
+                <div class="alert alert-warning" role="alert">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% block content %} {% endblock %}
+</div>
+<form action="/proxy-cookies/add" method="post">
+    <label for="proxyCookie">
+        Cookie：
+        <input type="text" name="proxy_cookie">
+    </label>
+    <div>
+        <input type="submit" value="提交">
+    </div>
+</form>
 </body>
 </html>

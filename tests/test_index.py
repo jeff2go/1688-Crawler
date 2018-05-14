@@ -7,10 +7,3 @@ def test_add_proxy_cookies(client):
     rv = client.post('/proxy-cookies/add', data=dict(cookie=cookie))
     json_data = rv.get_json()
     assert 'msg' in json_data
-
-
-@pytest.mark.fast
-def test_get_random_proxy_cookie(client):
-    rv = client.get('/proxy-cookies/random')
-    json_data = rv.get_json()
-    assert 'cookie' in json_data

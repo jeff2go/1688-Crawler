@@ -35,7 +35,7 @@ def test_crawl_products_with_exception(client):
     assert 'errcode' in rv.get_json()
 
 
-@pytest.mark.fast
+@pytest.mark.product
 def test_crawl_product(client):
     url = 'https://detail.1688.com/offer/1152061078.html'
     rv = client.get('/crawlers/product', query_string=dict(url=url))
