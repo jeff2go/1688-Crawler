@@ -22,6 +22,11 @@ def crawl_products():
 
 @web.route('/crawlers/product', methods=['GET'])
 def crawl_product():
-    product = Product()
-    product = product.go(request.args.get('url'))
-    return jsonify(product)
+    try:
+        product = Product()
+        product = product.go(request.args.get('url'))
+        return jsonify(product)
+    except Exception as e:
+        resp = jsonify({'errcode': 500, 'errmsg': '抓取产品异常: ' + str(e)})
+        resp.status_code = 500
+        return resp
