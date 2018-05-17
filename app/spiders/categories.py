@@ -70,7 +70,7 @@ class Categories:
             'id': id,
             'title': title,
             'contactor': contactor,
-            'telphone': telephone,
+            'telephone': telephone,
             'mobile': mobile,
             'address': address
         }
