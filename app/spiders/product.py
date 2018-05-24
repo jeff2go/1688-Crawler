@@ -75,6 +75,9 @@ class Product:
         content = get_html(description_request_url)
         content = content[30:-3].replace('\\', '')
         content = re.sub('href[^>]+', 'href="#none"', content)
+        if not content:
+            easy_desc = tree.xpath('//div[contains(@class, "offerdetail_easyoffer_dsc")]')[0]
+            content += str(html.tostring(easy_desc), encoding="utf-8")
         return content
 
     def go(self, url):
