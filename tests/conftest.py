@@ -5,7 +5,7 @@ from app import create_app
 
 @pytest.fixture
 def app():
-    yield create_app(test_config = {
+    yield create_app(test_config={
         'TESTING': True,
     })
 
