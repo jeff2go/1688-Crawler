@@ -22,9 +22,7 @@ def get_html(url, count=1):
         print('Tried Too Many Count')
         return None
     try:
-        response = requests.get(url, headers=headers, allow_redirects=False, proxies={
-            'http': 'http://60.191.250.36:80',
-        })
+        response = requests.get(url, headers=headers, allow_redirects=False)
         if response.status_code == 200:
             return response.text
         if response.status_code == 302:
