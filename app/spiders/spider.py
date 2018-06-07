@@ -23,7 +23,7 @@ def get_html(url, count=1):
         return None
     try:
         response = requests.get(url, headers=headers, allow_redirects=False, proxies={
-            'http': 'http://52.187.144.187:80',
+            'http': 'http://60.191.250.36:80',
         })
         if response.status_code == 200:
             return response.text
