@@ -11,13 +11,15 @@ def get_html(url, count=1):
     global cookie, redis
     max_count = int(MAX_REQUEST_COUNT)
     headers = {
-        'Cookie': cookie,
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36',
-        'pragma': 'no-cache',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6,ja;q=0.5',
+        'cookie': cookie,
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36',
         'upgrade-insecure-requests': '1',
-        'cache-control': 'no-cache',
     }
     print('Try Count', count)
+    print('proxy_http', PROXY_HTTP)
     if count >= max_count:
         print('Tried Too Many Count')
         return None
