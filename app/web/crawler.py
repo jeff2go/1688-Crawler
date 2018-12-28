@@ -1,4 +1,5 @@
 from flask import jsonify, request
+import traceback
 
 from . import web
 from app.spiders.product import Product
@@ -27,6 +28,7 @@ def crawl_product():
         product = product.go(request.args.get('url'))
         return jsonify(product)
     except Exception as e:
+        traceback.print_exc()
         resp = jsonify({'errcode': 500, 'errmsg': '抓取产品异常: ' + str(e)})
         resp.status_code = 500
         return resp
