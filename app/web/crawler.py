@@ -9,16 +9,28 @@ from app.spiders.categories import Categories
 
 @web.route('/crawlers/categories', methods=['GET'])
 def crawl_categories():
-    categories = Categories()
-    categories = categories.go(request.args.get('url'))
-    return jsonify(categories)
+    try:
+        categories = Categories()
+        categories = categories.go(request.args.get('url'))
+        return jsonify(categories)
+    except Exception as e:
+        traceback.print_exc()
+        resp = jsonify({'errcode': 500, 'errmsg': '抓取商铺分类异常: ' + str(e)})
+        resp.status_code = 500
+        return resp
 
 
 @web.route('/crawlers/products', methods=['GET'])
 def crawl_products():
-    products = Products()
-    products = products.go(request.args.get('url'))
-    return jsonify(products)
+    try:
+        products = Products()
+        products = products.go(request.args.get('url'))
+        return jsonify(products)
+    except Exception as e:
+        traceback.print_exc()
+        resp = jsonify({'errcode': 500, 'errmsg': '抓取产品列表异常: ' + str(e)})
+        resp.status_code = 500
+        return resp
 
 
 @web.route('/crawlers/product', methods=['GET'])

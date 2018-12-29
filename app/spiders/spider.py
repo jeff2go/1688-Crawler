@@ -28,7 +28,6 @@ def get_html(url, count=1):
             return response.text
         if response.status_code == 302:
             print('request 302')
-            print('cookie', cookie)
             redis.decrease(cookie)
             cookie = redis.random()
             if cookie:
