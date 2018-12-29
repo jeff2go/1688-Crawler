@@ -4,18 +4,17 @@ verify_ssl = false
 name = "aliyun"
 
 [packages]
-flask = "*"
-requests = "*"
-lxml = "*"
-numpy = "*"
-gunicorn = "*"
-redis = "*"
-python-dotenv = "*"
-wtforms = "*"
+flask = "~=1.0"
+requests = "~=2.20"
+lxml = "~=4.2"
+gunicorn = "~=19.9"
+redis = "~=3.0"
+python-dotenv = "~=0.10"
+wtforms = "~=2.2"
 
 [dev-packages]
-pytest = "*"
-coverage = "*"
+pytest = "~=4.0"
+coverage = "~=4.5"
 
 [requires]
 python_version = "3.7"
