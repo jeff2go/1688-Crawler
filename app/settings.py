@@ -5,6 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 SECRET_KEY = os.getenv('SECRET_KEY', '\x0bo\x92\x7f\x0ceW+v\xd2\xb6F\xfe\xea\x00\x92\xbcPf\x0e\x92<m\xf4')
+ENV = os.getenv('ENV', 'development')
 DEBUG = os.getenv('DEBUG', False)
 
 REDIS_HOST = os.getenv('REDIS_HOST', '127.0.0.1')
