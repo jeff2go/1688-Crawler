@@ -23,8 +23,10 @@ class Go2Product:
 
     # 详情描述
     def __extract_description(self, content):
+        # <img class="lazy" src="/images/loading.png" data-url="http://go2.i.ximgs.net/4/493394/20190410/20190410548282001_750.jpg" />
+        # <img src="http://img1.yiwugou.com/i004/2019/06/13/85/9e66eddbfef02821a48d9f4ca5bae293.jpg@800w_1o" alt="" />
         res = re.findall("<!--商品详情-->([\\s\\S]+)<!--拿货咨询-->", content)
-        return res[0]
+        return res[0].replace('class="lazy"', '').replace('src="/images/loading.png"', '').replace('data-url', 'src')
 
     # 提取价格
     def __extract_price(self, tree):
