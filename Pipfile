@@ -15,6 +15,7 @@ wtforms = "~=2.2"
 [dev-packages]
 pytest = "~=4.0"
 coverage = "~=4.5"
+autopep8 = "*"
 
 [requires]
 python_version = "3.6"
