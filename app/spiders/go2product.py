@@ -25,7 +25,13 @@ class Go2Product:
 
     # 标题
     def __extract_title(self, tree):
-        return tree.xpath('//div[@class="product-details"]//h6/text()')[0]
+        titleElements = tree.xpath('//div[@class="product-details"]//h6/text()')
+        if len(titleElements) > 0:
+            return titleElements[0]
+        goodsNumElements = tree.xpath('//div[@class="product-details"]//span[@class="ft-bold"]/text()')
+        if len(goodsNumElements) > 0:
+            return '商品货号：' + goodsNumElements[0]
+        return '未获取标题'
 
     # 图片
     def __extract_images(self, tree):
@@ -37,12 +43,14 @@ class Go2Product:
         # <img class="lazy" src="/images/loading.png" data-url="http://go2.i.ximgs.net/4/493394/20190410/20190410548282001_750.jpg" />
         # <img src="http://img1.yiwugou.com/i004/2019/06/13/85/9e66eddbfef02821a48d9f4ca5bae293.jpg@800w_1o" alt="" />
         res = re.findall("<!--商品详情-->([\\s\\S]+)<!--拿货咨询-->", content)
-        return res[0].replace('class="lazy"', '').replace('src="/images/loading.png"', '').replace('data-url', 'src')
+        return '<meta name="referrer" content="no-referrer">' + res[0].replace('class="lazy"', '').replace('src="/images/loading.png"', '').replace('data-url', 'src')
 
     # 提取价格
     def __extract_price(self, tree):
-        res = tree.xpath('//meta[@property="og:product:price"]/@content')[0]
-        return res
+        priceElements = tree.xpath('//meta[@property="og:product:price"]/@content')
+        if len(priceElements):
+            return priceElements[0]
+        return '0.00'
 
     def __extract_sku_props(self, tree):
         res1 = tree.xpath('//div[@class="properties-box"]//li[@title]/@title')
