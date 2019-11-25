@@ -1,20 +1,27 @@
 # 1688-Crawler
 
-
 Based on Flask, require python3.6
 
 ## Install
 
-Install requirements by pipenv:
+Create a virtual environment by venv
 
 ```sh
-$ pipenv install
+$ python3 -m venv venv
+$ source ./venv/bin/activate
+```
+
+Install requirements by pip:
+
+```sh
+$ pip install -r requirements.txt
 ```
 
 ## Run
 
 ```python
-pipenv run python run.py
+python run.py
 ```
 
-Open http://127.0.0.1:8080 in a browser.
+Open http://127.0.0.1:5000 in a browser.
+
