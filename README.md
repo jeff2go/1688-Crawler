@@ -7,15 +7,19 @@ Based on Flask, require python3.9
 Create a virtual environment by venv
 
 ```sh
-$ python3 -m venv .venv
-$ source .venv/bin/activate
-$ mv .env.example .env
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 Install requirements by pip:
 
 ```sh
-$ pip install -r requirements.txt
+pip install -r requirements.txt
+```
+
+### Config
+```shell
+mv .env.example .env
 ```
 
 ## Run
