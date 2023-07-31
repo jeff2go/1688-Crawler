@@ -1,14 +1,15 @@
 # 1688-Crawler
 
-Based on Flask, require python3.6
+Based on Flask, require python3.9
 
 ## Install
 
 Create a virtual environment by venv
 
 ```sh
-$ python3 -m venv venv
-$ source ./venv/bin/activate
+$ python3 -m venv .venv
+$ source .venv/bin/activate
+$ mv .env.example .env
 ```
 
 Install requirements by pip:
@@ -19,7 +20,7 @@ $ pip install -r requirements.txt
 
 ## Run
 
-```python
+```shell
 python run.py
 ```
 
