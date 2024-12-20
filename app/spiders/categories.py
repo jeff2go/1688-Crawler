@@ -104,7 +104,6 @@ class Categories:
 
     def go(self, url):
         content = get_html(url, headers)
-        print("content", content)
         tree = html.fromstring(content)
 
         data = {
