@@ -28,5 +28,27 @@ mv .env.example .env
 python run.py
 ```
 
-Open http://127.0.0.1:5000 in a browser.
+Open http://127.0.0.1:8080 in a browser.
 
+## API Endpoints
+
+### 1. Get Categories
+```
+GET /crawlers/categories
+```
+Retrieves all categories from a 1688 shop page.
+- Query Parameter: `url` - The URL of the 1688 shop
+
+### 2. Get Product List
+```
+GET /crawlers/products
+```
+Retrieves a list of products from a 1688 category or search page.
+- Query Parameter: `url` - The URL of the product list page
+
+### 3. Get Product Details
+```
+GET /crawlers/product
+```
+Retrieves detailed information about a specific product.
+- Query Parameter: `url` - The URL of the product detail page
