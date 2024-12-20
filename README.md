@@ -36,15 +36,15 @@ Open http://127.0.0.1:8080 in a browser.
 ```
 GET /crawlers/categories
 ```
-Retrieves all categories from a 1688 shop page.
-- Query Parameter: `url` - The URL of the 1688 shop
+Retrieves all categories from a 1688 shop home page.
+- Query Parameter: `url` - The URL of the 1688 shop home page
 
 ### 2. Get Product List
 ```
 GET /crawlers/products
 ```
-Retrieves a list of products from a 1688 category or search page.
-- Query Parameter: `url` - The URL of the product list page
+Retrieves a list of products from a 1688 shop category or search page.
+- Query Parameter: `url` - The URL of a shop product list page
 
 ### 3. Get Product Details
 ```
